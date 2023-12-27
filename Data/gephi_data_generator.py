@@ -21,6 +21,9 @@ charities_df = pd.read_csv(file_path)
 # Add new rows by splitting the classification column
 charities_df = charities_df.assign(Classification=charities_df['Classification'].str.split(';')).explode('Classification')
 
+# Remove deregistered charities
+charities_df = charities_df[charities_df['Charity Status'] != 'Deregistered']
+
 # Process the financial size - take the middle value of the range
 financial_sizes = {"$0":0, "$<50,000": 25000, "$50,000 and <$200,000": 125000, "$200,000 and <$250,000": 225000, "$250,000 and <$500,000": 375000, "$500,000 and <$1,000,000": 750000, "$1,000,000 and <$5,000,000": 3000000, "$5,000,000 and <$10,000,000": 7500000, "$10,000,000": 10000000}
 charities_df['Financial Size'] = charities_df['Financial Size'].map(financial_sizes)
